@@ -4,16 +4,6 @@ import transactionAnalysis from '@pages/finLife/transactionAnalysis';
 import jiaRiBaoManage from '@pages/functional/jiaRiBaoManage';
 import financialManage from '@pages/functional/financialManage';
 const pageRouters = [
-	// {
-	// 	path: '/international',
-	// 	icon: 'earth',
-	// 	title: { i18n: 'international' },
-	// 	name: 'international',
-	// 	component: Home,
-	// 	children: [
-	// 		{ path: 'index', title: { i18n: 'international' }, name: 'international_index', component: resolve => { require(['@/views/international/international.vue'], resolve); } }
-	// 	]
-	// },
 	{
 		path: '/finLife',
 		icon: 'social-buffer',
