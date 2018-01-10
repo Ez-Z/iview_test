@@ -34,7 +34,7 @@ let Component = {
                     { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
                 ]
             }
-        }
+        };
     },
     methods: {
         handleSubmit(name) {
@@ -44,7 +44,7 @@ let Component = {
                 } else {
                     this.$Message.error('Fail!');
                 }
-            })
+            });
         }
     }
 };

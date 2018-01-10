@@ -3,7 +3,7 @@ import iView from 'iview';
 import Router from 'vue-router';
 import appRouter from './pageRouters';
 import Home from '@pages/Home';
-import Welcome from '@pages/Welcome';
+import Welcome from '@components/Home/Welcome';
 import Login from '@pages/Login';
 import * as $util from '@util/util';
 Vue.use(Router);
