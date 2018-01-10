@@ -9,6 +9,10 @@
 				<Input type="password" v-model="formInline.password" placeholder="Password">
 				</Input>
 			</FormItem>
+            <FormItem prop="time">
+				<DatePicker type="datetimerange" format="yyyy/MM/dd HH:mm:ss" v-model="formInline.time" placeholder="Select date and time" style="width: 300px"></DatePicker>
+			</FormItem>
+            
 			<FormItem>
 				<Button type="primary" @click="handleSubmit('formInline')"  icon="ios-search">查询</Button>
 			</FormItem>
@@ -23,14 +27,15 @@ let Component = {
         return {
             formInline: {
                 user: '',
-                password: ''
+                password: '',
+                time: ''
             },
             ruleInline: {
                 user: [
-                    { required: true, message: 'Please fill in the user name', trigger: 'blur' }
+                    { required: false, message: 'Please fill in the user name', trigger: 'blur' }
                 ],
                 password: [
-                    { required: true, message: 'Please fill in the password.', trigger: 'blur' },
+                    { required: false, message: 'Please fill in the password.', trigger: 'blur' },
                     { type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
                 ]
             }
@@ -41,6 +46,7 @@ let Component = {
             this.$refs[name].validate((valid) => {
                 if (valid) {
                     this.$Message.success('Success!');
+                    console.log(this.$data.formInline.time[0]);
                 } else {
                     this.$Message.error('Fail!');
                 }
