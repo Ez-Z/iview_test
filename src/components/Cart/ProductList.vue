@@ -3,11 +3,11 @@
 		<li v-for="p in products">
 			{{ p.title }} - {{ p.price | currency }}
 			<br>
-			<button
+			<Button
 				:disabled="!p.inventory"
 				@click="addToCart(p)">
 				Add to cart
-			</button>
+			</Button>
 		</li>
 		<p>{{$url.webUrl}}</p>
 	</ul>
@@ -25,7 +25,7 @@ export default {
 	computed: mapGetters({
 		products: 'allProducts'
 	}),
-	methods: mapActions([
+	methods:mapActions([
 		'addToCart'
 	]),
 	created () {

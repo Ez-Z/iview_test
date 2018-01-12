@@ -1,5 +1,5 @@
 <template>
-	<Menu ref="navList" class="sidebar-menu-con" :active-name="activeName" :theme="theme" :open-names="openNames" accordion @on-select="handleClick">
+	<Menu ref="navList" class="sidebar-menu-con" :active-name="names.activeName" :theme="theme" :open-names="[names.openName]" @on-select="handleClick">
 		<template v-for="item in menuList">
 			<MenuItem v-if="item.children.length<=1" :name="item.children[0].name" :key="item.name">
 				<Icon :type="item.icon" :size="iconSize" :key="item.name"></Icon>
@@ -19,35 +19,54 @@
 </template>
 
 <script>
-
+import { mapGetters } from 'vuex';
 
 let Component = {
 	props: {
-		menuList: Array,
+		menuList: Array
 	},
 	data () {
 		return {
-			isCreate: false,
 			theme: 'dark',
 			iconSize: '20px',
-			openNames: [],
-			activeName: ''
 		};
 	},
+	computed: {
+		...mapGetters({
+			names: 'names'
+		})
+	},
 	created() {
-		if (!this.$data.isCreate) {
-			let urlPath = this.$router.history.current.path;
-			this.openNames.push(urlPath.split('/')[1]);
-			this.activeName = urlPath.split('/')[2];
-		}	
+
+	},
+	beforeMount() {
+
+	},
+	beforeUpdate() {
+		
+	},
+	updated() {
+		this.$nextTick(()=>{
+			this.$refs.navList.updateOpened();
+		});
 	},
 	methods: {
 		handleClick(name) {
-			this.$emit('on-change', name);
+			let willpush = true;
+			if (this.beforePush !== undefined) {
+				if (!this.beforePush(name)) {
+					willpush = false;
+				}
+			}
+			if (willpush) {
+				this.$router.push({
+					name: name
+				});
+			}
 		},
 	},
 	mounted () {
-
+		
 	}
 	
 };

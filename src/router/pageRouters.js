@@ -3,6 +3,7 @@ import orderManage from '@pages/finLife/orderManage';
 import transactionAnalysis from '@pages/finLife/transactionAnalysis';
 import jiaRiBaoManage from '@pages/functional/jiaRiBaoManage';
 import financialManage from '@pages/functional/financialManage';
+import Cart from '@pages/Cart';
 const pageRouters = [
 	{
 		path: '/finLife',
@@ -58,11 +59,27 @@ const pageRouters = [
 		component: Home,
 		children: [
 			{
-				path: 'jiaRiBaoManange2',
+				path: 'Cart',
 				icon: 'pound',
-				name: 'jiaRiBaoManange2',
+				name: 'Cart',
 				title: '假日宝管理2',
 				component: jiaRiBaoManage
+			}
+		]
+	},
+	{
+		path: '/cart',
+		icon: 'android-sad',
+		name: 'cart',
+		title: '购物车',
+		component: Home,
+		children: [
+			{
+				path: 'index',
+				icon: 'pound',
+				name: 'index',
+				title: '购物车',
+				component: Cart
 			}
 		]
 	},

@@ -56,13 +56,16 @@ router.beforeEach((to, from, next) => {
 			name: 'home'
 		});
 	} else {
-		$util.toDefaultPage([...routers], to.name, router, next);
+		$util.toDefaultPage([...routers], to.name, router, next,to.path);
 	}
 });
 
 router.afterEach((to) => {
+	// let vm = router.app;
+
 	iView.LoadingBar.finish();
 	window.scrollTo(0, 0);
+	// $util.getPathNames(vm, to.path);
 });
 
 

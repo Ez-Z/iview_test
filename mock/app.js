@@ -21,7 +21,7 @@ for(let key in apis){
 //   res.send({msg:"Hello World!!++22"});
 // });
 
-let server = app.listen(1010, function () {
+let server = app.listen(3001, function () {
 	let host = server.address().address;
 	let port = server.address().port;
 

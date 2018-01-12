@@ -13,6 +13,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$util = Util;
 Vue.prototype.$url = url;
 Vue.use(iView);
+Vue.filter('currency', Util.currency);
 /* eslint-disable no-new */
 const app = new Vue({
 	el: '#app',

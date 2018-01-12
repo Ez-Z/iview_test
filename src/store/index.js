@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-// import cart from './Cart';
+import cart from './Cart';
+import Home from './Home';
 import createLogger from '@plugins/logger';
 
 Vue.use(Vuex);
@@ -11,7 +12,8 @@ export default new Vuex.Store({
 	// actions,
 	// getters,
 	modules: {
-		// cart,
+		cart,
+		Home
 	},
 	strict: debug,
 	plugins: debug ? [createLogger()] : []

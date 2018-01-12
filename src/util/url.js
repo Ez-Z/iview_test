@@ -1,5 +1,5 @@
 let url = {
-	webUrl: 'http://localhost:1010',
+	webUrl: 'http://localhost:3001',
 	fileSever: 'http://test-file.qbm360.com/FileServerServlet',
 	imageSeverPath: 'http://test-web.qbm360.com/zaimages/data/upload/zizhi/qbmimg',
 	wapUrl: 'http://test-wap.qbm360.com/'

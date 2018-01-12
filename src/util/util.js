@@ -370,7 +370,7 @@ export const initLink = (event) => {
 /**
  * 跳转对应的链接
  */
-export const toDefaultPage = function (routers, name, route, next) {
+export const toDefaultPage = function (routers, name, route, next, path) {
     let len = routers.length;
     let i = 0;
     let notHandle = true;
@@ -388,6 +388,7 @@ export const toDefaultPage = function (routers, name, route, next) {
     if (notHandle) {
         next();
     }
+    getPathNames(route.app, path);
 };
 
 /**
@@ -402,21 +403,6 @@ export const oneOf = function (ele, targetArr) {
 };
 const digitsRE = /(\d{3})(?=\d)/g;
 
-export function currency(value, currency, decimals) {
-	value = parseFloat(value);
-	if (!isFinite(value) || (!value && value !== 0)) return '';
-	currency = currency != null ? currency : '$';
-	decimals = decimals != null ? decimals : 2;
-	let stringified = Math.abs(value).toFixed(decimals);
-	let _int = decimals ? stringified.slice(0, -1 - decimals) : stringified;
-	let i = _int.length % 3;
-	let head = i > 0 ? (_int.slice(0, i) + (_int.length > 3 ? ',' : '')) : '';
-	let _float = decimals ? stringified.slice(-1 - decimals) : '';
-	let sign = value < 0 ? '-' : '';
-	return sign + currency + head +
-		_int.slice(i).replace(digitsRE, '$1,') +
-		_float;
-};
 
 export const handleTitle = function (vm, item) {
     if (typeof item.title === 'object') {
@@ -446,152 +432,24 @@ export const getRouterObjByName = function (routers, name) {
     return null;
 };
 
-export const setCurrentPath = function (vm, name) {
-    let title = '';
-    let isOtherRouter = false;
-    vm.$store.state.app.routers.forEach(item => {
-        if (item.children.length === 1) {
-            if (item.children[0].name === name) {
-                title = handleTitle(vm, item);
-                if (item.name === 'otherRouter') {
-                    isOtherRouter = true;
-                }
-            }
-        } else {
-            item.children.forEach(child => {
-                if (child.name === name) {
-                    title = handleTitle(vm, child);
-                    if (item.name === 'otherRouter') {
-                        isOtherRouter = true;
-                    }
-                }
-            });
-        }
-    });
-    let currentPathArr = [];
-    if (name === 'index') {
-        currentPathArr = [
-            {
-                title: handleTitle(vm, getRouterObjByName(vm.$store.state.app.routers, 'index')),
-                path: '',
-                name: 'index'
-            }
-        ];
-    } else if ((name.indexOf('_index') >= 0 || isOtherRouter) && name !== 'index') {
-        currentPathArr = [
-            {
-                title: handleTitle(vm, getRouterObjByName(vm.$store.state.app.routers, 'index')),
-                path: '/home',
-                name: 'index'
-            },
-            {
-                title: title,
-                path: '',
-                name: name
-            }
-        ];
-    } else {
-        let currentPathObj = vm.$store.state.app.routers.filter(item => {
-            if (item.children.length <= 1) {
-                return item.children[0].name === name;
-            } else {
-                let i = 0;
-                let childArr = item.children;
-                let len = childArr.length;
-                while (i < len) {
-                    if (childArr[i].name === name) {
-                        return true;
-                    }
-                    i++;
-                }
-                return false;
-            }
-        })[0];
-        if (currentPathObj.children.length <= 1 && currentPathObj.name === 'home') {
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '',
-                    name: 'index'
-                }
-            ];
-        } else if (currentPathObj.children.length <= 1 && currentPathObj.name !== 'home') {
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '/home',
-                    name: 'index'
-                },
-                {
-                    title: currentPathObj.title,
-                    path: '',
-                    name: name
-                }
-            ];
-        } else {
-            let childObj = currentPathObj.children.filter((child) => {
-                return child.name === name;
-            })[0];
-            currentPathArr = [
-                {
-                    title: '首页',
-                    path: '/home',
-                    name: 'index'
-                },
-                {
-                    title: currentPathObj.title,
-                    path: '',
-                    name: currentPathObj.name
-                },
-                {
-                    title: childObj.title,
-                    path: currentPathObj.path + '/' + childObj.path,
-                    name: name
-                }
-            ];
-        }
-    }
-    vm.$store.commit('setCurrentPath', currentPathArr);
-
-    return currentPathArr;
+export function currency(value, currency, decimals) {
+	value = parseFloat(value);
+	if (!isFinite(value) || (!value && value !== 0)) return '';
+	currency = currency != null ? currency : '$';
+	decimals = decimals != null ? decimals : 2;
+	let stringified = Math.abs(value).toFixed(decimals);
+	let _int = decimals ? stringified.slice(0, -1 - decimals) : stringified;
+	let i = _int.length % 3;
+	let head = i > 0 ? (_int.slice(0, i) + (_int.length > 3 ? ',' : '')) : '';
+	let _float = decimals ? stringified.slice(-1 - decimals) : '';
+	let sign = value < 0 ? '-' : '';
+	return sign + currency + head +
+		_int.slice(i).replace(digitsRE, '$1,') +
+		_float;
 };
 
-export const openNewPage = function (vm, name, argu, query) {
-    let pageOpenedList = vm.$store.state.app.pageOpenedList;
-    let openedPageLen = pageOpenedList.length;
-    let i = 0;
-    let tagHasOpened = false;
-    while (i < openedPageLen) {
-        if (name === pageOpenedList[i].name) { // 页面已经打开
-            vm.$store.commit('pageOpenedList', {
-                index: i,
-                argu: argu,
-                query: query
-            });
-            tagHasOpened = true;
-            break;
-        }
-        i++;
-    }
-    if (!tagHasOpened) {
-        let tag = vm.$store.state.app.tagsList.filter((item) => {
-            if (item.children) {
-                return name === item.children[0].name;
-            } else {
-                return name === item.name;
-            }
-        });
-        tag = tag[0];
-        if (tag) {
-            tag = tag.children ? tag.children[0] : tag;
-            if (argu) {
-                tag.argu = argu;
-            }
-            if (query) {
-                tag.query = query;
-            }
-            vm.$store.commit('increateTag', tag);
-        }
-    }
-    vm.$store.commit('setCurrentPageName', name);
+export const getPathNames = function (vm, path){
+	setTimeout(function() {
+		vm.$store.dispatch('getNames', path);
+	},0);
 };

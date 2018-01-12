@@ -6,10 +6,9 @@
 		</vHeader>
 		<nav-list 
 		:menuList="menuList"
-		@on-change="changeMenu"
 		>
 		</nav-list>
-		<div :class="{'container': true, 'full': menuHide}">
+		<div :style="{width: containerWidth + 'px', height: containerHeight + 'px'}" :class="{'container': true, 'full': menuHide}">
 			<router-view></router-view>
 		</div>		
 	</div>
@@ -28,24 +27,27 @@ let Component = {
 	},
 	data () {
 		return {
+			containerWidth: document.body.clientWidth - 240,
+			containerHeight: document.body.clientHeight - 70,
 			menuList: pageRouters,
 			menuHide: false
 		};
 	},
+	
 	methods: {
-		changeMenu(name) {
-			let willpush = true;
-			if (this.beforePush !== undefined) {
-				if (!this.beforePush(name)) {
-					willpush = false;
-				}
-			}
-			if (willpush) {
-				this.$router.push({
-					name: name
-				});
-			}
-		},
+		// changeMenu(name) {
+		// 	let willpush = true;
+		// 	if (this.beforePush !== undefined) {
+		// 		if (!this.beforePush(name)) {
+		// 			willpush = false;
+		// 		}
+		// 	}
+		// 	if (willpush) {
+		// 		this.$router.push({
+		// 			name: name
+		// 		});
+		// 	}
+		// },
 		hideMenu() {
 			console.log(1);
 			if (this.menuHide) {
@@ -78,8 +80,7 @@ a {
 	top: 70px;
 	left: 240px;
 	z-index: 10;
-	width: 100%;
-	height: 100%;
+	overflow: auto;
 	font-size: 28px;
 	background: #fff;
 	transition: left 0.5s;
