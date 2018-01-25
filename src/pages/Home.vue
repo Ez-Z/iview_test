@@ -35,21 +35,7 @@ let Component = {
 	},
 	
 	methods: {
-		// changeMenu(name) {
-		// 	let willpush = true;
-		// 	if (this.beforePush !== undefined) {
-		// 		if (!this.beforePush(name)) {
-		// 			willpush = false;
-		// 		}
-		// 	}
-		// 	if (willpush) {
-		// 		this.$router.push({
-		// 			name: name
-		// 		});
-		// 	}
-		// },
 		hideMenu() {
-			console.log(1);
 			if (this.menuHide) {
 				this.menuHide = false;
 			} else {
@@ -80,6 +66,7 @@ a {
 	top: 70px;
 	left: 240px;
 	z-index: 10;
+	padding: 30px;
 	overflow: auto;
 	font-size: 28px;
 	background: #fff;

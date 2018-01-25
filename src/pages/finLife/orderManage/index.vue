@@ -21,18 +21,28 @@
 		<div class="tableBox">
 			<Table border :columns="columns7" :data="data6"></Table>
 		</div>
+		<order-popup
+		:isShow="isShow"
+		:modelData="modelData"
+		@togglePopup="togglePopup"
+		></order-popup>
 	</div>
 	
 </template>
 
 <script>
 import { Button } from 'iview';
-
+import orderPopup from '@components/orderManage/orderPopup';
 
 
 let Component = {
+	components: {
+		orderPopup,
+	},
 	data () {
 		return {
+			isShow: false,
+			modelData: {},
 			formInline: {
 				user: '',
 				password: '',
@@ -87,7 +97,7 @@ let Component = {
 								},
 								on: {
 									click: () => {
-										this.show(params.index);
+										this.togglePopup(params.index);
 									}
 								}
 							}, 'View'),
@@ -141,11 +151,23 @@ let Component = {
 				}
 			});
 		},
-		show (index) {
-			this.$Modal.info({
-				title: 'User Info',
-				content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-			});
+		togglePopup (data) {
+			if (!this.isShow) {
+				this.modelData = this.data6[data];
+			} else {
+				this.modelData = {};
+				const {
+					btn,
+					num
+				} = data;
+				console.table(data);
+			}
+
+			this.isShow = !this.isShow;
+			// this.$Modal.info({
+			// 	title: 'User Info',
+			// 	content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
+			// });
 		},
 		remove (index) {
 			this.data6.splice(index, 1);
