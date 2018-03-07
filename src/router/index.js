@@ -5,6 +5,7 @@ import appRouter from './pageRouters';
 import Home from '@pages/Home';
 import Welcome from '@components/Home/Welcome';
 import Login from '@pages/Login';
+import ErrPage from '@pages/404';
 import * as $util from '@util/util';
 Vue.use(Router);
 
@@ -24,6 +25,9 @@ let routers = [
 		name: 'home',
 		redirect: '/welcome',
 		component: Home,
+		meta: {
+			title: '首页'
+		},
 		children: [
 			{ path: 'welcome', title: 'welcome', name: 'welcome', component: Welcome }
 		]
@@ -32,11 +36,15 @@ let routers = [
 		path: '/login',
 		name: 'login',
 		meta: {
-			title: '登录'
+			title: '钱保姆后台管理系统'
 		},
 		component: Login
 	},
-	...appRouter
+	...appRouter,
+    {
+      path: '*',
+      component: ErrPage
+    }
 ];
 
 let router = new Router({

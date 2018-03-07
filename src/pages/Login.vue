@@ -1,40 +1,37 @@
 <template>
 	<div class="login" @keydown.enter="handleSubmit">
 		<div class="login-con">
-			<Card :bordered="false">
-				<p slot="title">
-					<Icon type="log-in"></Icon>
-					欢迎登录
-				</p>
-				<div class="form-con">
-					<Form ref="loginForm" :model="form" :rules="rules">
-						<FormItem prop="userName">
-							<Input v-model="form.userName" placeholder="请输入用户名">
-								<span slot="prepend">
-									<Icon :size="16" type="person"></Icon>
-								</span>
-							</Input>
-						</FormItem>
-						<FormItem prop="password">
-							<Input type="password" v-model="form.password" placeholder="请输入密码">
-								<span slot="prepend">
-									<Icon :size="14" type="locked"></Icon>
-								</span>
-							</Input>
-						</FormItem>
-						<FormItem>
-							<Button @click="handleSubmit" type="primary" long>登录</Button>
-						</FormItem>
-					</Form>
-					<p class="login-tip">输入任意用户名和密码即可</p>
-				</div>
-			</Card>
+			<h1 class="login-logo">
+				<img src="../img/login-logo.png" alt="钱保姆后台管理系统">
+			</h1>
+			<div class="form-con">
+				<Form ref="loginForm" :model="form" :rules="rules">
+					<FormItem prop="userName">
+						<Input v-model="form.userName" @keyup.enter="handleSubmit" size="large" placeholder="用户名"></Input>
+					</FormItem>
+					<FormItem prop="password">
+						<Input type="password" v-model="form.password" @keyup.enter="handleSubmit" size="large" placeholder="登录密码"></Input>
+					</FormItem>
+					<FormItem prop="vcode">
+						<Input type="text" v-model="form.vcode" @keyup.enter="handleSubmit" size="large" :maxlength="4" placeholder="验证码" style="width: 190px;"></Input>
+						<img src="../img/vcode.png" class="vcode" @click="changeVcode">
+					</FormItem>
+					<FormItem>
+						<Button @click="handleSubmit" type="warning" size="large" long>登录</Button>
+					</FormItem>
+				</Form>
+			</div>
 		</div>
 	</div>
 </template>
 
 <script>
-import { setCookie } from '@util/util';
+import { setCookie, setItem, getItem } from '@util/util';
+import url from '@util/url';
+import Home from '@pages/Home';
+import { components } from '@router/pageComponents';
+
+
 export default {
 	data () {
 		return {
@@ -44,58 +41,128 @@ export default {
 			},
 			rules: {
 				userName: [
-					{ required: true, message: '账号不能为空', trigger: 'blur' }
+					{ required: true, message: '用户名不能为空', trigger: 'blur' }
 				],
 				password: [
 					{ required: true, message: '密码不能为空', trigger: 'blur' }
+				],
+				vcode: [
+					{ required: true, message: '验证码不能为空', trigger: 'blur' }
 				]
 			}
 		};
 	},
 	methods: {
+		changeVcode(){
+			console.log("更换验证码");
+		},
 		handleSubmit () {
 			this.$refs.loginForm.validate((valid) => {
 				if (valid) {
 					setCookie('user', this.form.userName);
+
+					// //动态获取页面 + 设置路由
+					// let pageData = []; //后台返回页面信息
+					// let pageRouters = []; //动态添加路由
+					// fetch(`${url.webUrl}/pages`).then(response => {
+					// 	return response.json();
+					// }).then( data =>{
+					// 	pageData = data;
+					// 	for (let i = 0; i < pageData.length; i++) {
+					// 		pageData[i] = {
+					// 			...pageData[i],
+					// 			path: '/' + pageData[i].name,
+					// 			component: Home
+					// 		};
+					// 		let $children = [...pageData[i].children];
+					// 		for (let j = 0; j < $children.length; j++) {
+					// 			let component = {};
+					// 			for (let k = 0; k < components.length; k++) {
+					// 				if (components[k].name == $children[j].name) {
+					// 					component = components[k];
+					// 				}
+					// 			}
+
+					// 			$children[j] = {
+					// 				...$children[j],
+					// 				name: '' + $children[j].name,
+					// 				path: $children[j].name,
+					// 				component: component,
+					// 				meta: {
+					// 					title: $children[j].title
+					// 				}
+					// 			};
+					// 		}
+					// 		pageData[i] = {
+					// 			...pageData[i],
+					// 			children: $children
+					// 		};
+					// 		pageRouters = [
+					// 			...pageRouters,
+					// 			pageData[i]
+					// 		];
+					// 	}
+
+					// 	this.$router.addRoutes(pageRouters);
+
+					// 	const pm = new Promise((resolve, reject) => {
+					// 		setItem('pageRouters', pageRouters);
+					// 	  	resolve && resolve();
+					// 	});
+
+					// 	pm.then(()=> {
+					// 		this.$router.push({
+					// 			name: 'home'
+					// 		});
+					// 	});
+					// });
 					this.$router.push({
 						name: 'home'
 					});
 				}
 			});
-		}
+		},
 	}
 };
 </script>
 
-<style lang='scss'>
+<style lang='scss' >
 .login{
 	position: relative;
 	width: 100%;
 	height: 100%;
-	background-color: #999;
-	// background-image: url('https://file.iviewui.com/iview-admin/login_bg.jpg');
-	// background-size: cover;
-	// background-position: center;
+	background-color: #f8f6f2;
 	.login-con{
 		position: absolute;
-		right: 160px;
-		top: 50%;
-		transform: translateY(-60%);
 		width: 300px;
-		.login-header{
-			font-size: 16px;
-			font-weight: 300;
+		height: 230px;
+		left: 50%;
+		top: 50%;
+		margin-left: -150px;
+		margin-top: -150px;
+		.login-logo{
 			text-align: center;
-			padding: 30px 0;
 		}
+		
 		.form-con{
 			padding: 10px 0 0;
+			.ivu-input-large,.ivu-btn-large{
+				height: 44px;
+			}
+			.ivu-btn-large{
+				font-size: 16px;
+			}
 		}
-		.login-tip{
-			font-size: 10px;
-			text-align: center;
-			color: #c3c3c3;
+		.vcode{
+			height: 44px;
+			background-color: #fff;
+			float: right;
+			width: 100px;
+			border-radius: 4px;
+			cursor: pointer;
 		}
 	}
 }
+
+
 </style>

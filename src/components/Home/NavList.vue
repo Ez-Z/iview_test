@@ -1,7 +1,7 @@
 <template>
-	<Menu ref="navList" class="sidebar-menu-con" :active-name="names.activeName" :theme="theme" :open-names="[names.openName]" @on-select="handleClick">
+	<Menu :style="{height:cHeight + 'px'}" ref="navList" class="sidebar-menu-con" :active-name="names.activeName" :theme="theme" :open-names="[names.openName]" @on-select="handleClick">
 		<template v-for="item in menuList">
-			<MenuItem v-if="item.children.length<=1" :name="item.children[0].name" :key="item.name">
+			<MenuItem v-if="item.children.length<=1" :name="item.name" :key="item.name">
 				<Icon :type="item.icon" :size="iconSize" :key="item.name"></Icon>
 				<span class="layout-text" :key="item.name">{{item.title}}</span>
 			</MenuItem>
@@ -11,7 +11,7 @@
 					{{item.title}}
 				</template>
 				<template v-for="child in item.children">
-					<MenuItem :name="child.name" :key="child.name">{{child.title}}</MenuItem>
+					<MenuItem :name="child.name" :key="child.name">{{child.meta.title}}</MenuItem>
 				</template>
 			</Submenu>
 		</template>
@@ -23,7 +23,8 @@ import { mapGetters } from 'vuex';
 
 let Component = {
 	props: {
-		menuList: Array
+		menuList: Array,
+		cHeight: Number
 	},
 	data () {
 		return {

@@ -14,6 +14,7 @@ import ProductList from '@components/Cart/ProductList';
 import Cart from '@components/Cart/Cart';
 
 export default {
+	name: 'cart',
 	components: { ProductList, Cart }
 };
 </script>

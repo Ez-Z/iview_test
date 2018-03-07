@@ -35,7 +35,7 @@ export const getCookie = (key) => {
 };
 
 export const title = function(title) {
-	title = title || 'manage';
+	title = title || '钱保姆后台管理系统';
 	window.document.title = title;
 };
 /**
@@ -62,6 +62,8 @@ export const setItem = (key, val) => {
 		localStorage.setItem(key, val);
 	}
 };
+
+
 /**
  * 获取缓存
  * @param  {[String]} key 获取的键值

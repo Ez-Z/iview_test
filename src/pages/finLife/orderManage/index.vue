@@ -1,63 +1,71 @@
 <template>
 	<div>
-		<div class="seachBox">
-			<Form ref="formInline" :model="formInline" :rules="ruleInline" inline>
-				<FormItem prop="user">
-					<Input type="text" v-model="formInline.user" placeholder="Username">
-					</Input>
-				</FormItem>
-				<FormItem prop="password">
-					<Input type="password" v-model="formInline.password" placeholder="Password">
-					</Input>
-				</FormItem>
-				<FormItem prop="time">
-					<DatePicker type="datetimerange" format="yyyy/MM/dd HH:mm:ss" v-model="formInline.time" placeholder="Select date and time" style="width: 300px"></DatePicker>
-				</FormItem>
-				<FormItem>
-					<Button type="primary" @click="handleSubmit('formInline')"  icon="ios-search">查询</Button>
-				</FormItem>
-			</Form>
-		</div>
-		<div class="tableBox">
-			<Table border :columns="columns7" :data="data6"></Table>
-		</div>
+		<TablePage
+		:columns="columns"
+		:tableData="data6"
+		:page="page"
+		>
+			<Button type="primary" slot="header" style="margin-right: 5px;">新增</Button>
+			<Button type="primary" @click="toggleSearch" icon="ios-search" slot="header"></Button>
+		</TablePage>
+
+		<search-bar
+		:searchShow="searchShow"
+		:formItem.sync="formItem"
+		@toggleSearch="toggleSearch"
+		@searchSubmit="handleSubmit"
+		>
+			<FormItem label="user">
+				<Input type="text" placeholder="Username" v-model="formItem.input" style="width: 200px;">
+				</Input>
+			</FormItem>
+			<FormItem label="订单时间">
+				<DatePicker format="yyyy-MM-dd HH:mm:ss" placement="bottom-end" type="datetimerange" @on-change="handleDateChange" style="width: 300px"></DatePicker>
+			</FormItem>
+			<CategorySelect
+			:levelOne.sync="formItem.levelOne"
+			:levelTwo.sync="formItem.levelTwo"
+			:levelThree.sync="formItem.levelThree"
+			></CategorySelect>
+		</search-bar>
+
 		<order-popup
-		:isShow="isShow"
-		:modelData="modelData"
+		:isShow="popShow"
 		@togglePopup="togglePopup"
 		></order-popup>
 	</div>
-	
 </template>
 
 <script>
-import { Button } from 'iview';
 import orderPopup from '@components/orderManage/orderPopup';
-
+import TablePage from '@components/common/TablePage';
+import searchBar from '@components/common/SearchBar';
+import CategorySelect from '@components/common/CategorySelect';
 
 let Component = {
+	name: 'orderManage',
 	components: {
 		orderPopup,
+		TablePage,
+		searchBar,
+		CategorySelect
 	},
 	data () {
 		return {
-			isShow: false,
-			modelData: {},
-			formInline: {
-				user: '',
-				password: '',
-				time: ''
+			popShow: false, //弹窗是否显示
+			searchShow: false, //搜索块是否显示
+			formItem: {
+				input: '',
+				channelId: '',
+				levelOne: '',
+				levelTwo: '',
+				levelThree: '',
+				date: '',
 			},
-			ruleInline: {
-				user: [
-					{ required: false, message: 'Please fill in the user name', trigger: 'blur' }
-				],
-				password: [
-					{ required: false, message: 'Please fill in the password.', trigger: 'blur' },
-					{ type: 'string', min: 6, message: 'The password length cannot be less than 6 bits', trigger: 'blur' }
-				]
+			page: {
+				total: 150
 			},
-			columns7: [
+			columns: [ //表格key值、title等设置
 				{
 					title: '姓名',
 					key: 'name',
@@ -116,7 +124,7 @@ let Component = {
 					}
 				}
 			],
-			data6: [
+			data6: [ //模拟表格数据
 				{
 					name: 'John Brown',
 					age: 18,
@@ -136,39 +144,59 @@ let Component = {
 					name: 'Jon Snow',
 					age: 26,
 					address: 'Ottawa No. 2 Lake Park'
-				}
+				},
+				{
+					name: 'John Brown',
+					age: 18,
+					address: 'New York No. 1 Lake Park'
+				},
+				{
+					name: 'Jim Green',
+					age: 24,
+					address: 'London No. 1 Lake Park'
+				},
+				{
+					name: 'Joe Black',
+					age: 30,
+					address: 'Sydney No. 1 Lake Park'
+				},
+				{
+					name: 'Jon Snow',
+					age: 26,
+					address: 'Ottawa No. 2 Lake Park'
+				},
+				{
+					name: 'John Brown',
+					age: 18,
+					address: 'New York No. 1 Lake Park'
+				},
+				{
+					name: 'Jim Green',
+					age: 24,
+					address: 'London No. 1 Lake Park'
+				},
 			]
 		};
 	},
 	methods: {
-		handleSubmit(name) {
-			this.$refs[name].validate((valid) => {
-				if (valid) {
-					this.$Message.success('Success!');
-					console.log(this.$data.formInline.time[0]);
-				} else {
-					this.$Message.error('Fail!');
-				}
-			});
+		//搜索提交
+		handleSubmit() {
+			console.log(this.formItem);
 		},
+		//显示隐藏弹窗
 		togglePopup (data) {
-			if (!this.isShow) {
-				this.modelData = this.data6[data];
-			} else {
-				this.modelData = {};
-				const {
-					btn,
-					num
-				} = data;
-				console.table(data);
-			}
-
-			this.isShow = !this.isShow;
-			// this.$Modal.info({
-			// 	title: 'User Info',
-			// 	content: `Name：${this.data6[index].name}<br>Age：${this.data6[index].age}<br>Address：${this.data6[index].address}`
-			// });
+			this.popShow = !this.popShow;
 		},
+		//日期选择数据绑定
+		handleDateChange(value) {
+			console.log(value);
+			this.formItem.date = value;
+		},
+		//显示隐藏搜索
+		toggleSearch () {
+			this.searchShow = !this.searchShow;
+		},
+		//删除
 		remove (index) {
 			this.data6.splice(index, 1);
 		}

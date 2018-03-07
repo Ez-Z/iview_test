@@ -4,6 +4,7 @@ import transactionAnalysis from '@pages/finLife/transactionAnalysis';
 import jiaRiBaoManage from '@pages/functional/jiaRiBaoManage';
 import financialManage from '@pages/functional/financialManage';
 import Cart from '@pages/Cart';
+
 const pageRouters = [
 	{
 		path: '/finLife',
@@ -16,14 +17,18 @@ const pageRouters = [
 				path: 'orderManage',
 				icon: 'pound',
 				name: 'orderManage',
-				title: '订单管理',
+				meta: {
+					title: '订单管理'
+				},
 				component: orderManage
 			},
 			{
 				path: 'transactionAnalysis',
 				icon: 'arrow-move',
 				name: 'transactionAnalysis',
-				title: '交易分析',
+				meta: {
+					title: '交易分析'
+				},
 				component: transactionAnalysis
 			}
 		]
@@ -36,53 +41,44 @@ const pageRouters = [
 		component: Home,
 		children: [
 			{
-				path: 'jiaRiBaoManange',
+				path: 'jiaRiBaoManage',
 				icon: 'pound',
-				name: 'jiaRiBaoManange',
-				title: '假日宝管理',
+				name: 'jiaRiBaoManage',
+				meta: {
+					title: '假日宝管理'
+				},
 				component: jiaRiBaoManage
 			},
 			{
-				path: 'financialMange',
+				path: 'financialManage',
 				icon: 'arrow-move',
-				name: 'financialMange',
-				title: '投资管理',
+				name: 'financialManage',
+				meta: {
+					title: '投资管理'
+				},
+
 				component: financialManage
 			}
 		]
 	},
-	{
-		path: '/functional2',
-		icon: 'android-sad',
-		name: 'functional2',
-		title: '功能2',
-		component: Home,
-		children: [
-			{
-				path: 'Cart',
-				icon: 'pound',
-				name: 'Cart',
-				title: '假日宝管理2',
-				component: jiaRiBaoManage
-			}
-		]
-	},
-	{
-		path: '/cart',
-		icon: 'android-sad',
-		name: 'cart',
-		title: '购物车',
-		component: Home,
-		children: [
-			{
-				path: 'index',
-				icon: 'pound',
-				name: 'index',
-				title: '购物车',
-				component: Cart
-			}
-		]
-	},
+	// {
+	// 	path: '/cart',
+	// 	icon: 'android-sad',
+	// 	name: 'cart',
+	// 	title: '购物车',
+	// 	component: Home,
+	// 	children: [
+	// 		{
+	// 			path: 'index',
+	// 			icon: 'pound',
+	// 			name: 'index',
+	// 			meta: {
+	// 				title: '购物车'
+	// 			},
+	// 			component: Cart
+	// 		}
+	// 	]
+	// },
 	// {
 	// 	path: '/error-page',
 	// 	icon: 'android-sad',

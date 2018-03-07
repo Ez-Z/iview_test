@@ -70,6 +70,7 @@ let Component = {
 			console.log(name);
 			if (name == "logout") {
 				delCookie('user');
+				location.reload();
 				this.$router.push({
 					name: 'login'
 				});
@@ -85,6 +86,7 @@ export default Component;
 <style lang='scss' scoped>
 	.header {
 		position: relative;
+		z-index: 9999;
 		box-sizing: border-box;
 		width: 100%;
 		height: 70px;
@@ -98,6 +100,7 @@ export default Component;
 			text-align: center;
 		}
 	}
+
 	.controlBtn {
 		float: left;
 		.ivu-btn{
@@ -118,7 +121,7 @@ export default Component;
 			left: 0;
 			width:40px;
 			height:40px;
-			border-radius: 50%;
+			border-radius: 100%;
 		}
 	}
 </style>

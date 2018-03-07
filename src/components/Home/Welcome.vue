@@ -10,7 +10,7 @@ let Component = {
 	name: 'welcome',
 	data () {
 		return {
-			msg: "欢迎使用后台"
+			msg: "欢迎使用钱保姆后台管理系统"
 		};
 	},
 	// mounted() {
