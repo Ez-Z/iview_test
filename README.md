@@ -33,4 +33,6 @@ For detailed explanation on how things work, checkout the [guide](http://vuejs-t
 1. 页面动态路由与公共下拉导航的联系。借鉴了iview_admin的一些方法，由于其用了vuex来获取，可能会产生一些生命周期和数据为空的问题页面渲染失败，而且并不需要用到面包屑和显示打开页面的部分，所以我这边简化成直接获取页面路由，直接拿到数据来渲染。
 2. 当刷新页面时，iview的Menu组件会收起来，无法记录刷新前选中状态。解决办法：获取路由中当前链接的path，在created钩子中修改 open-name 和 active-name的值，从而实现打开状态的正确渲染。
 3. 在2.中的方法不适用于返回操作，所以换了一种方式，使用vuex从router的path中获取openName和activeName，然后在updated中执行$nextTick,在其中使用iview的updateOpened方法，达到刷新和返回都达到预期目的（同时也存在一个问题，返回时候不能达到手风琴，会让subMenu打开多个，待解决）。
+4. addRoutes 在登录时使用，登录后生效并生成菜单都正常，菜单存于localStorage中，刷新页面可以生成菜单，但是路由失效，尝试了网上的一些方法无果，问题待解决，有空尝试使用vuex + localStorage来解决问题。
+
 
