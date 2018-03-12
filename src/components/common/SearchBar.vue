@@ -103,7 +103,7 @@ export default Component;
 		z-index: 998;
 		width: 100%;
 		height: 100%;
-		background: rgba(0, 0, 0, 0.3);
+		background-color: rgba(55, 55, 55, .2);
 		transition: display 0.5s;
 	}
 </style>

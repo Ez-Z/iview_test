@@ -1,7 +1,8 @@
 <template>
 	<div class="main">
 		<vHeader
-		@on-hide="hideMenu"
+		:menuHide.sync="menuHide"
+		@handleReloadMenu="handleReloadMenu"
 		>
 		</vHeader>
 		<nav-list 
@@ -16,10 +17,10 @@
 </template>
 
 <script>
-import { getItem } from "@util/util";
+import { getItem, getRoutes } from "@util/util";
 import NavList from '@components/Home/NavList';
 import vHeader from '@components/Home/Header';
-import pageRouters from '@router/pageRouters';
+
 let Component = {
 	name: 'Home',
 	components: {
@@ -28,11 +29,11 @@ let Component = {
 	},
 	data () {
 		return {
-			containerWidth: document.body.clientWidth - 240,
-			containerHeight: document.body.clientHeight - 70,
+			containerWidth: document.body.clientWidth - 200,
+			containerHeight: document.body.clientHeight - 60,
 			menuList: [],
-			menuHide: false,
-			message: 'guys'
+			menuHide: true,
+			isReload: true
 		};
 	},
 	computed: {
@@ -42,71 +43,49 @@ let Component = {
 			if (newState) {
 				this.containerWidth = document.body.clientWidth;
 			}else {
-				this.containerWidth = document.body.clientWidth - 240;				
+				this.containerWidth = document.body.clientWidth - 200;				
 			}
 		}
 	},
-	beforeCreate: function () {
-		console.group('beforeCreate 创建前状态===============》');
-		console.log("%c%s", "color:red" , "el     : " + this.$el); //undefined
-		console.log("%c%s", "color:red","data   : " + this.$data); //undefined 
-		console.log("%c%s", "color:red","message: " + this.message);
+	beforeCreate() {
 	},
-	created: function () {
-		console.group('created 创建完毕状态===============》');
-		console.log("%c%s", "color:red","el     : " + this.$el); //undefined
-		console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化 
-		console.log("%c%s", "color:red","message: " + this.message); //已被初始化
-	},
-	beforeMount: function () {
-		console.group('beforeMount 挂载前状态===============》');
-		console.log("%c%s", "color:red","el     : " + (this.$el)); //已被初始化
-		console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化  
-		console.log("%c%s", "color:red","message: " + this.message); //已被初始化  
-	},
-	beforeUpdate: function () {
-		console.group('beforeUpdate 更新前状态===============》');
-		console.log("%c%s", "color:red","el     : " + this.$el);
-		console.log(this.$el);   
-		console.log("%c%s", "color:red","data   : " + this.$data); 
-		console.log("%c%s", "color:red","message: " + this.message); 
-	},
-	updated: function () {
-		console.group('updated 更新完成状态===============》');
-		console.log("%c%s", "color:red","el     : " + this.$el);
-		console.log(this.$el); 
-		console.log("%c%s", "color:red","data   : " + this.$data); 
-		console.log("%c%s", "color:red","message: " + this.message); 
-	},
-	beforeDestroy: function () {
-		console.group('beforeDestroy 销毁前状态===============》');
-		console.log("%c%s", "color:red","el     : " + this.$el);
-		console.log(this.$el);    
-		console.log("%c%s", "color:red","data   : " + this.$data); 
-		console.log("%c%s", "color:red","message: " + this.message); 
-	},
-	destroyed: function () {
-		console.group('destroyed 销毁完成状态===============》');
-		console.log("%c%s", "color:red","el     : " + this.$el);
-		console.log(this.$el);  
-		console.log("%c%s", "color:red","data   : " + this.$data); 
-		console.log("%c%s", "color:red","message: " + this.message);
+	created(){
+		this.menuHide = this.$router.history.current.name == 'welcome' ? true : false;
 	},
 	mounted() {
-		console.group('mounted 挂载结束状态===============》');
-		console.log("%c%s", "color:red","el     : " + this.$el); //已被初始化
-		console.log(this.$el);    
-		console.log("%c%s", "color:red","data   : " + this.$data); //已被初始化
-		console.log("%c%s", "color:red","message: " + this.message); //已被初始化 
 		window.addEventListener('resize', ()=>{
-			this.containerWidth = document.body.clientWidth - 240;
-			this.containerHeight = document.body.clientHeight - 70;
+			this.containerWidth =  this.menuHide ? document.body.clientWidth : document.body.clientWidth - 200;
+			this.containerHeight = document.body.clientHeight - 60;
 		},false);
-		this.menuList = pageRouters;
+
+		!this.menuHide && this.handleReloadMenu();
+		
+		this.$http({
+			method: 'post',
+			url: '/products',
+			data: {},
+		}).then((response) => {
+			console.log(response);
+			this.$Message.success({
+				content: 'sss',
+			});
+		}).catch((err) => {
+		});
 	},
 	methods: {
 		hideMenu() {
 			this.menuHide = !this.menuHide;
+		},
+		handleReloadMenu(isMenuClick=false) {
+			let menuList = getItem('menuList');
+			let currentMenu = getItem('currentMenu');
+			setTimeout(()=>{
+				this.menuList = menuList;
+				this.$router.push({
+					name: !isMenuClick ? this.$router.history.current.name : menuList[0].children[0].name
+				});
+			},0);
+			
 		}
 	}
 };
@@ -126,8 +105,8 @@ export default Component;
 }
 .container {
 	position: absolute;
-	top: 70px;
-	left: 240px;
+	top: 60px;
+	left: 200px;
 	padding: 20px;
 	z-index: 10;
 	overflow: auto;

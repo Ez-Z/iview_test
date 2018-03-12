@@ -4,7 +4,6 @@
         title="修改"
         @on-ok="ok"
         @on-cancel="cancel"
-        :closable="false"
         class-name="vertical-center-modal aaa"
         >
         <!-- <p

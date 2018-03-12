@@ -4,9 +4,11 @@
 		:columns="columns"
 		:tableData="data6"
 		:page="page"
+		:oneSelect="false"
+		@selectChange="handleSelectionChange"
 		>
-			<Button type="primary" slot="header" style="margin-right: 5px;">新增</Button>
-			<Button type="primary" @click="toggleSearch" icon="ios-search" slot="header"></Button>
+			<Button type="primary" icon="plus" slot="header" style="margin-right: 5px;">新增</Button>
+			<Button type="primary" icon="android-search" slot="header" @click="toggleSearch">搜索</Button>
 		</TablePage>
 
 		<search-bar
@@ -43,7 +45,7 @@ import searchBar from '@components/common/SearchBar';
 import CategorySelect from '@components/common/CategorySelect';
 
 let Component = {
-	name: 'orderManage',
+	name: 'orderManageIndex',
 	components: {
 		orderPopup,
 		TablePage,
@@ -62,10 +64,16 @@ let Component = {
 				levelThree: '',
 				date: '',
 			},
+			ids: [],
 			page: {
 				total: 150
 			},
 			columns: [ //表格key值、title等设置
+				{
+					type: 'selection',
+					width: 60,
+					align: 'center',
+				},
 				{
 					title: '姓名',
 					key: 'name',
@@ -91,86 +99,108 @@ let Component = {
 				{
 					title: '操作',
 					key: 'action',
-					width: 150,
+					width: 220,
 					align: 'center',
 					render: (h, params) => {
 						return h('div', [
 							h('Button', {
 								props: {
 									type: 'primary',
+									icon: 'compose',
 									size: 'small'
-								},
-								style: {
-									marginRight: '5px'
 								},
 								on: {
 									click: () => {
 										this.togglePopup(params.index);
 									}
 								}
-							}, 'View'),
-							h('Button', {
+							},'编辑'),
+							h('Poptip', {
 								props: {
-									type: 'error',
-									size: 'small'
+									confirm: true,
+									title: '您确定要删除这条数据吗?',
+									transfer: true
 								},
 								on: {
-									click: () => {
+									'on-ok': () => {
+										console.log(params);
 										this.remove(params.index);
 									}
 								}
-							}, 'Delete')
+							}, [
+								h('Button', {
+									style: {
+										margin: '0 5px'
+									},
+									props: {
+										type: 'error',
+										placement: 'top',
+										size: 'small',
+										icon: 'trash-a'	
+									}
+								}, '删除')
+							])
 						]);
 					}
 				}
 			],
 			data6: [ //模拟表格数据
 				{
+					id: 1,
 					name: 'John Brown',
 					age: 18,
 					address: 'New York No. 1 Lake Park'
 				},
 				{
+					id: 2,
 					name: 'Jim Green',
 					age: 24,
 					address: 'London No. 1 Lake Park'
 				},
 				{
+					id: 3,
 					name: 'Joe Black',
 					age: 30,
 					address: 'Sydney No. 1 Lake Park'
 				},
 				{
+					id: 4,
 					name: 'Jon Snow',
 					age: 26,
 					address: 'Ottawa No. 2 Lake Park'
 				},
 				{
+					id: 5,
 					name: 'John Brown',
 					age: 18,
 					address: 'New York No. 1 Lake Park'
 				},
 				{
+					id: 6,
 					name: 'Jim Green',
 					age: 24,
 					address: 'London No. 1 Lake Park'
 				},
 				{
+					id: 7,
 					name: 'Joe Black',
 					age: 30,
 					address: 'Sydney No. 1 Lake Park'
 				},
 				{
+					id: 8,
 					name: 'Jon Snow',
 					age: 26,
 					address: 'Ottawa No. 2 Lake Park'
 				},
 				{
+					id: 9,
 					name: 'John Brown',
 					age: 18,
 					address: 'New York No. 1 Lake Park'
 				},
 				{
+					id: 10,
 					name: 'Jim Green',
 					age: 24,
 					address: 'London No. 1 Lake Park'
@@ -182,6 +212,25 @@ let Component = {
 		//搜索提交
 		handleSubmit() {
 			console.log(this.formItem);
+		},
+		//多选
+		handleSelectionChange(selection) {
+			// console.log(selection);
+			let ids = [];
+			if (selection.length > 0) {
+				for (let i = 0; i < selection.length; i++) {
+					const element = selection[i];
+					ids.push(element.id);
+				}
+			} else if (selection instanceof Object && selection.id) {
+				this.handleCurrentChange(selection);
+				return;
+			}
+			console.log(ids);
+			this.ids = ids;
+		},
+		handleCurrentChange(curr) {
+			console.log(curr);
 		},
 		//显示隐藏弹窗
 		togglePopup (data) {
@@ -198,6 +247,7 @@ let Component = {
 		},
 		//删除
 		remove (index) {
+			console.log(index);
 			this.data6.splice(index, 1);
 		}
 	}

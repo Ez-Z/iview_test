@@ -15,9 +15,8 @@
   },
   "dependencies": {
     "echarts": "^3.8.2",
-    "iview": "^2.7.4",
+    "iview": "^2.10.0",
     "mockjs": "^1.0.1-beta3",
-    "vue-axios": "^2.0.2",
     "vue-router": "^2.6.0",
     "vuex": "^2.3.1"
   },
@@ -59,6 +58,7 @@
     "url-loader": "^0.5.8",
     "vue": "^2.5.2",
     "vue-loader": "^12.1.0",
+    "vue-quill-editor": "^3.0.5",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.5.2",
     "webpack": "^2.6.1",

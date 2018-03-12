@@ -4,7 +4,14 @@
 			<slot name="header"></slot>	
 		</div>
 		<div class="tableContext">
-			<Table border :columns="columns" :data="tableData"></Table>
+			<Table
+			border
+			:highlight-row="oneSelect"
+			:columns="columns"
+			:data="tableData"
+			@on-selection-change="handleSelectionChange"
+			@on-current-change="handleSelectionChange"
+			></Table>
 		</div>
 		<div class="pageContext">
 			<Page :total="page.total" :page-size="10" show-total show-elevator></Page>
@@ -20,7 +27,8 @@ let Component = {
 	props: {
 		columns: Array,
 		tableData: Array,
-		page: Object
+		page: Object,
+		oneSelect: Boolean
 	},
 	data () {
 		return {
@@ -31,7 +39,9 @@ let Component = {
 		
 	},
 	methods: {
-		
+		handleSelectionChange(selection) {
+			this.$emit('selectChange', selection);
+		},
 	}
 };
 export default Component;
@@ -46,7 +56,7 @@ export default Component;
 		margin-bottom: 20px;
 	}
 	.pageContext {
-		margin-top: 40px;
+		margin-top: 10px;
 		text-align: right;
 	}
 }

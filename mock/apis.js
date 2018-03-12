@@ -1,6 +1,8 @@
 const apis= {
 	'/products': require('./data/cart'),
-	'/pages': require('./data/pages')
+	'/functional': require('./data/functional'),
+	'/system': require('./data/system'),
+	'/finLife': require('./data/finLife')	
 };
 
 module.exports = apis;

@@ -1,17 +1,17 @@
 <template>
-	<Menu :style="{height:cHeight + 'px'}" ref="navList" class="sidebar-menu-con" :active-name="names.activeName" :theme="theme" :open-names="[names.openName]" @on-select="handleClick">
+	<Menu :style="{height:cHeight + 'px'}" ref="navList" class="sidebar-menu-con" :active-name="names.activeName" :theme="theme" :open-names="[names.openName]" @on-select="handleClick" mode="vertical" width="200" >
 		<template v-for="item in menuList">
-			<MenuItem v-if="item.children.length<=1" :name="item.name" :key="item.name">
-				<Icon :type="item.icon" :size="iconSize" :key="item.name"></Icon>
+			<MenuItem v-if="!item.children || item.children.length<=1" :name="item.name" :key="item.name">
+				<Icon :type="item.icon" :size="iconSize"></Icon>
 				<span class="layout-text" :key="item.name">{{item.title}}</span>
 			</MenuItem>
-			<Submenu v-if="item.children.length>1" :name="item.name">
+			<Submenu v-if="item.children && item.children.length>1" :name="item.name">
 				<template slot="title">
-					<Icon type="ionic"></Icon>
+					<Icon :type="item.icon" :size="iconSize"></Icon>
 					{{item.title}}
 				</template>
 				<template v-for="child in item.children">
-					<MenuItem :name="child.name" :key="child.name">{{child.meta.title}}</MenuItem>
+					<MenuItem :name="child.name" :key="child.name">{{child.title ? child.title : child.meta.title}}</MenuItem>
 				</template>
 			</Submenu>
 		</template>
@@ -24,11 +24,11 @@ import { mapGetters } from 'vuex';
 let Component = {
 	props: {
 		menuList: Array,
-		cHeight: Number
+		cHeight: Number,
 	},
 	data () {
 		return {
-			theme: 'dark',
+			theme: 'light',
 			iconSize: '20px',
 		};
 	},
@@ -38,17 +38,15 @@ let Component = {
 		})
 	},
 	created() {
-
 	},
 	beforeMount() {
-
 	},
-	beforeUpdate() {
-		
+	beforeUpdate() {		
 	},
 	updated() {
 		this.$nextTick(()=>{
 			this.$refs.navList.updateOpened();
+			this.$refs.navList.updateActiveName();
 		});
 	},
 	methods: {
@@ -67,7 +65,6 @@ let Component = {
 		},
 	},
 	mounted () {
-		
 	}
 	
 };
@@ -79,7 +76,7 @@ export default Component;
 ul {
 	list-style-type: none;
 	padding: 0;
-	width: 240px;
+	width: 200px;
 	height: 100%;
 }
 
@@ -88,10 +85,10 @@ li {
 	width: 100%;
 }
 .sidebar-menu-con{
-	width: 240px;
+	width: 200px;
 	height: 100%;
 	position: fixed;
-	top: 70px;
+	top: 60px;
 	left: 0;
 	z-index: 9;
 	transition: width .3s;

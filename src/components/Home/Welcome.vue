@@ -1,7 +1,38 @@
 <template>
-	<div>
-		{{msg}}
+	<div class="welcom-wrap">
+		<p class="welcom-tip">{{msg}}</p>
+		<Row :gutter="16">
+			<Col span="6">
+				<Card>
+					<p slot="title">统计</p>
+					<p>Content</p>
+					<p>Content</p>
+				</Card>
+			</Col>
+			<Col span="6">
+				<Card>
+					<p slot="title">统计</p>
+					<p>Content</p>
+					<p>Content</p>
+				</Card>
+			</Col>
+			<Col span="6">
+				<Card>
+					<p slot="title">统计</p>
+					<p>Content</p>
+					<p>Content</p>
+				</Card>
+			</Col>
+			<Col span="6">
+				<Card>
+					<p slot="title">统计</p>
+					<p>Content</p>
+					<p>Content</p>
+				</Card>
+			</Col>
+		</Row>
 	</div>
+	
 </template>
 
 <script>
@@ -22,5 +53,11 @@ export default Component;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
-
+	.welcom-wrap{
+		width: 1200px;
+		margin: 0 auto;
+		.welcom-tip{
+			padding-bottom: 20px;
+		}
+	}
 </style>

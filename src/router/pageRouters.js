@@ -1,66 +1,240 @@
 import Home from '@pages/Home';
-import orderManage from '@pages/finLife/orderManage';
-import transactionAnalysis from '@pages/finLife/transactionAnalysis';
+
+//功能
 import jiaRiBaoManage from '@pages/functional/jiaRiBaoManage';
-import financialManage from '@pages/functional/financialManage';
+import regPageConfig from '@pages/functional/regPageConfig/list';
+
+import columnManage from '@pages/functional/articleManage/columnManage';
+import articleList from '@pages/functional/articleManage/articleList';
+
+//系统管理
+import adminManage from '@pages/system/authorization/adminList';
+import roleManage from '@pages/system/authorization/roleList';
+
+import operationLog from '@pages/system/systemMaintenance/operationLog';
+import systemConfig from '@pages/system/systemMaintenance/systemConfig';
+
+//乐享生活圈
+import unSoldList from '@pages/finLife/goodsManage/unSoldList';
+import onSoldList from '@pages/finLife/goodsManage/onSoldList';
+import goodsCategory from '@pages/finLife/goodsManage/category';
+import goodsChannelList from '@pages/finLife/goodsManage/channelList';
+
+import tagManage from '@pages/finLife/marketingManage/tagManage/list';
+import dailySpecials from '@pages/finLife/marketingManage/dailySpecials/list';
+
+import activityManageIndex from '@pages/finLife/activityManage';
+
+import orderManageIndex from '@pages/finLife/orderManage';
+
+
+// import transactionAnalysis from '@pages/finLife/transactionAnalysis';
+// import financialManage from '@pages/functional/financialManage';
+
+
 import Cart from '@pages/Cart';
 
 const pageRouters = [
+	//功能
 	{
-		path: '/finLife',
-		icon: 'social-buffer',
-		name: 'finLife',
-		title: '理财生活圈',
-		component: Home,
-		children: [
-			{
-				path: 'orderManage',
-				icon: 'pound',
-				name: 'orderManage',
-				meta: {
-					title: '订单管理'
-				},
-				component: orderManage
-			},
-			{
-				path: 'transactionAnalysis',
-				icon: 'arrow-move',
-				name: 'transactionAnalysis',
-				meta: {
-					title: '交易分析'
-				},
-				component: transactionAnalysis
-			}
-		]
-	},
-	{
-		path: '/functional',
-		icon: 'android-sad',
-		name: 'functional',
-		title: '功能',
+		path: '/promotionManagement',
+		name: 'promotionManagement',
+		title: '推广管理',
 		component: Home,
 		children: [
 			{
 				path: 'jiaRiBaoManage',
-				icon: 'pound',
 				name: 'jiaRiBaoManage',
 				meta: {
-					title: '假日宝管理'
+					title: '假日宝活动管理'
 				},
 				component: jiaRiBaoManage
 			},
 			{
-				path: 'financialManage',
+				path: 'regPageConfig',
 				icon: 'arrow-move',
-				name: 'financialManage',
+				name: 'regPageConfig',
 				meta: {
-					title: '投资管理'
+					title: '落地页配置'
 				},
-
-				component: financialManage
+				component: regPageConfig
+			}
+		]
+	},{
+		path: '/articleManage',
+		name: 'articleManage',
+		title: '文章管理',
+		component: Home,
+		children: [
+			{
+				path: 'columnManage',
+				name: 'columnManage',
+				meta: {
+					title: '栏目管理'
+				},
+				component: columnManage
+			},
+			{
+				path: 'articleList',
+				icon: 'arrow-move',
+				name: 'articleList',
+				meta: {
+					title: '文章列表'
+				},
+				component: articleList
 			}
 		]
 	},
+
+	//系统管理
+	{
+		path: '/authorization',
+		name: 'authorization',
+		title: '权限管理',
+		component: Home,
+		children: [
+			{
+				path: 'adminManage',
+				name: 'adminManage',
+				meta: {
+					title: '管理员管理'
+				},
+				component: adminManage
+			},
+			{
+				path: 'roleManage',
+				icon: 'arrow-move',
+				name: 'roleManage',
+				meta: {
+					title: '角色管理'
+				},
+				component: roleManage
+			}
+		]
+	},{
+		path: '/systemMaintenance',
+		name: 'systemMaintenance',
+		title: '系统维护',
+		component: Home,
+		children: [
+			{
+				path: 'operationLog',
+				name: 'operationLog',
+				meta: {
+					title: '操作日志'
+				},
+				component: operationLog
+			},
+			{
+				path: 'systemConfig',
+				icon: 'arrow-move',
+				name: 'systemConfig',
+				meta: {
+					title: '系统配置'
+				},
+				component: systemConfig
+			}
+		]
+	},
+
+	//乐享生活圈
+	{
+		path: '/goodsManage',
+		name: 'goodsManage',
+		title: '商品管理',
+		component: Home,
+		children: [
+			{
+				path: 'unSoldList',
+				name: 'unSoldList',
+				meta: {
+					title: '未上架商品'
+				},
+				component: unSoldList
+			},
+			{
+				path: 'onSoldList',
+				icon: 'arrow-move',
+				name: 'onSoldList',
+				meta: {
+					title: '已上架商品'
+				},
+				component: onSoldList
+			},
+			{
+				path: 'goodsCategory',
+				icon: 'arrow-move',
+				name: 'goodsCategory',
+				meta: {
+					title: '商品分类'
+				},
+				component: goodsCategory
+			},
+			{
+				path: 'goodsChannelList',
+				icon: 'arrow-move',
+				name: 'goodsChannelList',
+				meta: {
+					title: '渠道管理'
+				},
+				component: goodsChannelList
+			}
+		]
+	},{
+		path: '/marketingManage',
+		name: 'marketingManage',
+		title: '商品管理',
+		component: Home,
+		children: [
+			{
+				path: 'tagManage',
+				name: 'tagManage',
+				meta: {
+					title: '栏目标签管理'
+				},
+				component: tagManage
+			},
+			{
+				path: 'dailySpecials',
+				name: 'dailySpecials',
+				meta: {
+					title: '限时特卖'
+				},
+				component: dailySpecials
+			}
+		]
+	},{
+		path: '/activityManage',
+		name: 'activityManage',
+		title: '活动管理',
+		component: Home,
+		children: [
+			{
+				path: 'index',
+				name: 'activityManageIndex',
+				meta: {
+					title: '活动管理'
+				},
+				component: activityManageIndex
+			}
+		]
+	},{
+		path: '/orderManage',
+		name: 'orderManage',
+		title: '订单管理',
+		component: Home,
+		children: [
+			{
+				path: 'index',
+				name: 'orderManageIndex',
+				meta: {
+					title: '活动管理'
+				},
+				component: orderManageIndex
+			}
+		]
+	}
+
 	// {
 	// 	path: '/cart',
 	// 	icon: 'android-sad',

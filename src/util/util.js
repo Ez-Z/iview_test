@@ -35,7 +35,7 @@ export const getCookie = (key) => {
 };
 
 export const title = function(title) {
-	title = title || '钱保姆后台管理系统';
+	title = title ? `${title} - 钱保姆后台管理系统` : '钱保姆后台管理系统';
 	window.document.title = title;
 };
 /**
@@ -127,7 +127,7 @@ export const getDevice = () => {
 	// Webview
 	device.webView = (iphone || ipad || ipod) && ua.match(/.*AppleWebKit(?!.*Safari)/i);
 	// keng..
-	device.weixin = /MicroMessenger/i.test(ua);
+	// device.weixin = /MicroMessenger/i.test(ua);
 	return device;
 };
 /**
@@ -454,4 +454,55 @@ export const getPathNames = function (vm, path){
 	setTimeout(function() {
 		vm.$store.dispatch('getNames', path);
 	},0);
+};
+export const getRoutes = (data) => {
+	//动态获取页面 + 设置路由
+	let pageData = []; //后台返回页面信息
+	let pageRouters = []; //动态添加路由
+	pageData = data;
+	for (let i = 0; i < pageData.length; i++) {
+		pageData[i] = {
+			...pageData[i],
+			path: '/' + pageData[i].name,
+			// component: Home
+		};
+		let $children = [...pageData[i].children];
+		for (let j = 0; j < $children.length; j++) {
+			// let component = {};
+			// for (let k = 0; k < components.length; k++) {
+			// 	if (components[k].name == $children[j].name) {
+			// 		component = components[k];
+			// 	}
+			// }
+
+			$children[j] = {
+				...$children[j],
+				name: '' + $children[j].name,
+				path: $children[j].name,
+				// component: component,
+				meta: {
+					title: $children[j].title
+				}
+			};
+		}
+		pageData[i] = {
+			...pageData[i],
+			children: $children
+		};
+		pageRouters = [
+			...pageRouters,
+			pageData[i]
+		];
+	}
+	return pageRouters;
+		// const pm = new Promise((resolve, reject) => {
+		// 	setItem('pageRouters', pageRouters);
+		// 	resolve && resolve();
+		// });
+
+		// pm.then(()=> {
+		// 	this.$router.push({
+		// 		name: 'home'
+		// 	});
+		// });
 };

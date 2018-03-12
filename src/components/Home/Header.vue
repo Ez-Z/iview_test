@@ -1,81 +1,193 @@
 <template>
 	<div class="header">
-		<div class="logo">后台管理系统</div>
-		<div class="controlBtn">
-			<Button @click="handleHide" type="primary" icon="navicon-round"></Button>
-			<Button @click="handleChange" type="primary" icon="arrow-expand"></Button>
+		<div class="logo" @click="handleBackHome">
+			<img src="../../img/logo-min-white.png">
 		</div>
-		<div class="user-info">
-			<Dropdown  @on-click="handleLogout">
-				<a href="javascript:void(0)">
-					<img class="user-logo" src="../../img/logo-min.jpg">
-					{{username}}
+		<div class="middle-con">
+			<Menu ref="headerNav" mode="horizontal" theme="primary" @on-select="handleLoadNavMenu" :active-name="names.openName=='welcome' ? '': this.activeName">
+				<div class="layout-nav">
+					<MenuItem name="functional">
+						<Icon type="android-apps"></Icon>
+						功能管理
+					</MenuItem>
+					<MenuItem name="system">
+						<Icon type="android-settings"></Icon>
+						系统管理
+					</MenuItem>
+					<MenuItem name="finLife">
+						<Icon type="android-archive"></Icon>
+						乐享生活圈
+					</MenuItem>
+				</div>
+			</Menu>
+		</div>
+		<div class="avator-con">
+			<Dropdown transfer  @on-click="handleLogout">
+				<Avatar icon="person" size="large" />
+				<a href="javascript:void(0);">
+					<span class="header-user-name">{{ username }}</span>
 					<Icon type="arrow-down-b"></Icon>
 				</a>
 				<DropdownMenu slot="list">
+					<DropdownItem name="modifyPwd">修改密码</DropdownItem>
 					<DropdownItem name="logout">退出登录</DropdownItem>
 				</DropdownMenu>
 			</Dropdown>
+			<Modal
+				v-model="modifyPwdMmodal"
+				title="修改密码"				
+				@on-ok="ok"
+				@on-cancel="cancel"
+				class-name="vertical-center-modal"
+				width="420"
+				>
+				<Form ref="modifyPwdValidate" :model="modifyPwdValidate" :rules="modifyPwdRuleValidate" :label-width="90">
+					<FormItem label="原密码" prop="oldPwd">
+						<Input type="password" v-model="modifyPwdValidate.oldPwd" placeholder="原密码"></Input>
+					</FormItem>
+					<FormItem label="新密码" prop="newPwd">
+						<Input type="password" v-model="modifyPwdValidate.newPwd" placeholder="新密码"></Input>
+					</FormItem>
+					<FormItem label="确认新密码" prop="checkNewPwd">
+						<Input type="password" v-model="modifyPwdValidate.checkNewPwd" placeholder="确认新密码"></Input>
+					</FormItem>
+				</Form>
+				<div slot="footer">
+					<Button type="ghost" @click="handleReset('modifyPwdValidate')">重置</Button>
+					<Button type="primary" @click="handleSubmit('modifyPwdValidate')" style="margin-left: 8px">确定</Button>
+				</div>
+			</Modal>
 		</div>
 	</div>
+	
 </template>
 
 <script>
-import { delCookie } from '@util/util';
+import { mapGetters } from 'vuex';
+import { delCookie, setItem, getItem } from '@util/util';
 
 let Component = {
 	props: {
-		menuList: Array,
+		menuHide: Boolean
 	},
 	data () {
+		//表单验证
+		const validateOldPwd = (rule, value, callback) => {
+			if (value === '') {
+				callback(new Error('请输入原密码'));
+			} else {
+				callback();
+			}
+		};
+		const validateNewPwd = (rule, value, callback) => {
+			if (value === '') {
+				callback(new Error('请输入新密码'));
+			} else {
+				if (this.modifyPwdValidate.checkNewPwd !== '') {
+					// 对第二个密码框单独验证
+					this.$refs.modifyPwdValidate.validateField('checkNewPwd');
+				}
+				callback();
+			}
+		};
+		const validateCheckNewPwd = (rule, value, callback) => {
+			if (value === '') {
+				callback(new Error('请再次输入新密码'));
+			} else if (value !== this.modifyPwdValidate.newPwd) {
+				callback(new Error('两次新密码不一下致!'));
+			} else {
+				callback();
+			}
+		};
 		return {
-			username: 'admin',
+			username: '张三',
+			activeName: '',
 			value: false,
+			modifyPwdMmodal: false,
+			modifyPwdValidate: {
+				oldPwd: '',
+				newPwd: '',
+				checkNewPwd: ''
+			},
+			modifyPwdRuleValidate: {
+				oldPwd: [
+					{ validator: validateOldPwd, trigger: 'blur' }
+				],
+				newPwd: [
+					{ validator: validateNewPwd, trigger: 'blur' }
+				],
+				checkNewPwd: [
+					{ validator: validateCheckNewPwd, trigger: 'blur' }
+				],
+			}
 		};
 	},
+	computed: {
+		...mapGetters({
+			names: 'names'
+		})
+	},
+	updated() {
+
+	},
+	mounted() {
+		let currentMenu = getItem('currentMenu');
+		this.activeName = this.$router.history.current.name == 'welcome'? '' : currentMenu;
+	},
 	methods: {
-		handleFullscreen() {
-			let $body = document.body;
-			if (this.value) {
-				this.value = false;
-				if (document.exitFullscreen) {
-					document.exitFullscreen();
-				} else if (document.mozCancelFullScreen) {
-					document.mozCancelFullScreen();
-				} else if (document.webkitCancelFullScreen) {
-					document.webkitCancelFullScreen();
-				} else if (document.msExitFullscreen) {
-					document.msExitFullscreen();
-				}
-			} else {
-				this.value = true;
-				if ($body.requestFullscreen) {
-					$body.requestFullscreen();
-				} else if ($body.mozRequestFullScreen) {
-					$body.mozRequestFullScreen();
-				} else if ($body.webkitRequestFullScreen) {
-					$body.webkitRequestFullScreen();
-				} else if ($body.msRequestFullscreen) {
-					$body.msRequestFullscreen();
-				}
-			}
-		},
-		handleChange() {
-			this.handleFullscreen();
-		},
-		handleHide() {
-			this.$emit('on-hide');
-		},
 		handleLogout(name) {
-			console.log(name);
-			if (name == "logout") {
+			if (name === "modifyPwd"){
+				console.log(name);
+				this.modifyPwdMmodal = true;
+			} else if (name === "logout") {
 				delCookie('user');
 				location.reload();
 				this.$router.push({
 					name: 'login'
 				});
 			}
-		}
+		},
+		handleLoadNavMenu(name) {
+			this.$store.dispatch('setMenuList', name).then(()=>{
+				setTimeout(()=>{
+					this.$emit('handleReloadMenu', true);
+					this.$emit('update:menuHide', false);
+				},50);
+			});
+		},
+		ok () {
+			this.$refs["modifyPwdValidate"].resetFields();
+			this.$Message.info('确定');
+			// this.$Message.info('Clicked ok');
+			// this.$emit('togglePopup', {btn: 'ok', num: 1, content: this.content});
+			// this.content = "";
+		},
+		cancel () {
+			this.$refs["modifyPwdValidate"].resetFields();
+			console.log("取消");
+            //this.$Message.info('取消');
+		},
+		handleSubmit (name) {
+			this.$refs[name].validate((valid) => {
+				if (valid) {
+					console.log("验证通过");
+					this.$Message.success('Success!');
+				} else {
+					console.log("验证不通过");
+					this.$Message.error('Fail!');
+				}
+			});
+		},
+		handleReset (name) {
+			//重置表单
+			this.$refs[name].resetFields();
+		},
+		handleBackHome() {
+			this.$router.push({
+				name: 'home'
+			});
+			this.$emit('update:menuHide', true);
+		},
 	},
 	
 };
@@ -84,44 +196,43 @@ export default Component;
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang='scss' scoped>
+	.ivu-icon-arrow-down-b{
+		color: #fff;
+	}
 	.header {
 		position: relative;
-		z-index: 9999;
+		z-index: 99;
 		box-sizing: border-box;
 		width: 100%;
-		height: 70px;
-		font-size: 22px;
-		line-height: 70px;
-		background: #242f42;
+		height: 60px;
+		background-color: #2d8cf0;
 		color: #fff;
 		.logo{
-			float: left;
-			width:250px;
+			position: absolute;
+			left: 0;
+			top: 0;
+			bottom: 0;
+			width: 200px;
+			height: 60px;
 			text-align: center;
 		}
 	}
-
-	.controlBtn {
-		float: left;
-		.ivu-btn{
-			font-size: 24px;
-			line-height: 0.8;
-			padding: 4px 8px;
-			margin-right: 10px;
-		}
+	.middle-con{
+		position: absolute;
+		left: 200px;
+		top: 0;
+		bottom: 0;
+		width: 400px;
 	}
-	.user-info {
-		float: right;
-		padding-right: 50px;
-		font-size: 16px;
-		color: #fff;
-		.user-logo{
-			position: relative;
-			top: 15px;
-			left: 0;
-			width:40px;
-			height:40px;
-			border-radius: 100%;
+	.avator-con{
+		position: absolute;
+		right: 30px;
+		top: 10px;
+		bottom: 0;
+		.header-user-name{
+			display: inline-block;
+			color: #fff;
+			padding-left: 5px;
 		}
 	}
 </style>
