@@ -127,8 +127,11 @@ let Component = {
 			names: 'names'
 		})
 	},
+	beforeUpdate() {
+		let currentMenu = getItem('currentMenu');		
+		this.activeName = this.$router.history.current.name == 'welcome'? '' : currentMenu;				
+	},
 	updated() {
-
 	},
 	mounted() {
 		let currentMenu = getItem('currentMenu');
